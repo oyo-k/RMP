@@ -1,0 +1,142 @@
+---
+title: "R Markdownの作成" 
+subtitle: "RとPythonをhtmlドキュメントとして出力"
+title-prefix: "TEST" 
+pagetitle: "TSET"  
+author: "著者情報"
+author-meta: "所属情報"
+date: "`r Sys.Date()`"
+output: 
+  # ショートカットは ctrl + com + c でコメント
+  html_document:
+    # 全体的な見た目 
+    theme:
+      version: 4
+      bootswatch: simplex # 好みに合わせて変更化
+    number_sections: TRUE # 番号付与
+    # 不便に感じないため
+    toc: TRUE # 目次表示
+    toc_depth: 3 # 見出しレベル3まで表示
+    toc_float: TRUE # 目次の自動追尾
+    code_folding: hide # コードの折りたたみ許可
+    self_contained: TRUE # htmlファイル単独でも表示可能に
+    # コードの見た目
+    highlight: tango # 好みに合わせて変更化
+    # その他
+    md_extensions: "+ignore_line_breaks" 
+    keep_md: yes
+---
+
+# YAMLのおまじない
+
+- 単独で表示できるようにHTMLファイルを出力するためには?
+  - 下記のコードを冒頭に追加
+
+```{css, eval = FALSE, class.source="fold-show"}
+---
+title: "R Markdownの作成" 
+subtitle: "RとPythonをhtmlドキュメントとして出力"
+title-prefix: "TEST" 
+pagetitle: "TSET"  
+author: "著者"
+author-meta: "所属"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    # 全体的な見た目 
+    theme:
+      version: 4
+      bootswatch: simplex # 好みに合わせて変更化
+    number_sections: TRUE # 番号付与
+    # 不便に感じないため
+    toc: TRUE # 目次表示
+    toc_depth: 3 # 見出しレベル3まで表示
+    toc_float: TRUE # 目次の自動追尾
+    code_folding: hide # コードの折りたたみ許可
+    self_contained: TRUE # htmlファイル単独でも表示可能に
+    # コードの見た目
+    highlight: pygments # tango # 好みに合わせて変更化
+    # その他
+    md_extensions: "+ignore_line_breaks" 
+---
+```
+
+# 便利なショートカット
+- コメント化: ctrl + ⌘ + c
+- Rチャンク挿入: ⌥ + ⌘ + I
+
+# セットアップ
+
+Pythonをセットアップするには、
+
+- reticulateのライブラリーが必要である。
+- use_python によるパスの指定
+- macの場合は、下記のような環境設定が必要な場合あり
+    -   CONDA_SUBDIR=osx-arm64 conda create -n native numpy -c conda-forge
+
+```{r, setup , class.source="fold-show"}
+library(reticulate)
+use_python("/Users/oyokuratomo/opt/anaconda3/envs/native/bin")
+```
+
+# 見出しレベル1
+
+## データの制限
+
+-   質問：XXXXX
+-   データの制限
+    -   事前と事後は12でわりました
+-   読み込みデータのフォルダ
+
+## データの解説
+
+データから読み取れる点を箇条書
+
+- 読み取れる内容1
+- 読み取れる内容2
+- 読み取れる内容3
+
+## 先行研究と関連づいた内容
+データ分析を行った結果、その意味を明らかにするために、先行研究に関連する情報を入れる
+
+- 定説
+  - 〇〇、という批判がある 
+  - 〇〇、という証拠がある。
+
+## プログラム
+Pythonのプログラムを実行には下記の様に記載
+
+````
+`r ''````{python, class.source="fold-show"}
+print("hello")
+`r ''````
+````
+
+上記の記法によりhtmlでは下記のように描画される
+
+- 明らかにコードの説明が必要な時には？
+  - class.source="fold-show" を チャンクに入れる
+    - {python, class.source="fold-show"}
+    
+```{python, class.source="fold-show"}
+print("hello")
+```
+
+## Rのコード
+Rのプログラムを実行するには下記の様に記載
+
+````
+`r ''````{r}
+print("hello")
+`r ''````
+````
+
+上記の記法によりhtmlでは下記のように描画される
+
+```{r}
+print("hello")
+```
+
+```{r}
+plot(1:100)
+```
