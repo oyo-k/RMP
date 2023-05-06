@@ -1,0 +1,103 @@
+---
+title: "統計的検定1" 
+subtitle: "RとPython"
+title-prefix: "タイトルプリフィックス" 
+pagetitle: "ページタイトル"  
+author: " "
+author-meta: " "
+date: "`r Sys.Date()`"  
+output: 
+  # ショートカットは ctrl + com + c でコメント
+  html_document:
+    # 全体的な見た目 
+    theme:
+      version: 4
+      bootswatch: simplex # 好みに合わせて変更化
+    number_sections: TRUE # 番号付与
+    # 不便に感じないため
+    toc: TRUE # 目次表示
+    toc_depth: 3 # 見出しレベル3まで表示
+    toc_float: TRUE # 目次の自動追尾
+    code_folding: hide # コードの折りたたみ許可
+    self_contained: TRUE # htmlファイル単独でも表示可能に
+    # コードの見た目
+    highlight: tango # 好みに合わせて変更化
+    # その他
+    md_extensions: "+ignore_line_breaks" 
+---
+
+# セットアップ
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+#library(lme4)
+```
+
+# 内容
+- 平均の検定と回帰分析が同じになる例
+
+# 平均の検定
+## スチューデントのt検定
+
+-   群：2
+-   対応：なし
+-   正規性：あり
+-   量的データ（比率データ）
+
+### データの作成
+g2_rnorm_nonpaird.csvを生成する
+```{r}
+set.seed(42)
+group1 <- data.frame("g" = rep(0, 50), "F1" = rnorm(50, mean = 5, sd = 1))
+group2 <- data.frame("g" = rep(1, 50), "F1" = rnorm(50, mean = 7, sd = 1))
+data <- rbind(group1,group2)
+data$ID <- rep(1:100, 1) # IDを追加
+write.csv(data,"data/g2_rnorm_nonpaird.csv",row.names = FALSE)
+```
+
+### データの読み込み
+
+```{r}
+data = read.csv("data/g2_rnorm_nonpaird.csv")
+print(head(data))
+```
+
+### 基本統計量
+
+```{r}
+summary(data)
+```
+
+### 描画
+
+```{r}
+ggplot(data, aes(x = as.factor(g), y = F1)) +
+  geom_boxplot() +
+  labs(x = "Group", y = "Value")
+```
+
+### t検定の検定結果
+
+```{r}
+t_test <- t.test(F1 ~ g, data = data)
+print(t_test)
+```
+
+### 線形回帰
+
+```{r}
+linear_regression <- lm(F1 ~ g, data = data)
+summary(linear_regression)
+```
+
+### 一般化線形混合モデルの作成
+下記の様に記述することができるが、エラーが起きる。
+これは、IDに対応がないため
+
+```{r}
+# 一般化線形混合モデルの作成
+#model <- glmer(F1 ~ g + (1|ID), data = data, family = gaussian)
+# モデルの概要の表示
+#summary(model)
+```
+
