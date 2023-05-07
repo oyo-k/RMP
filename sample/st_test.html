@@ -11,7 +11,7 @@
 
 <meta name="author" content />
 
-<meta name="date" content="2023-05-06" />
+<meta name="date" content="2023-05-07" />
 
 <title>タイトルプリフィックス - ページタイトル</title>
 
@@ -1913,7 +1913,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">統計的検定1</h1>
 <h3 class="subtitle">RとPython</h3>
 <h4 class="author"></h4>
-<h4 class="date">2023-05-06</h4>
+<h4 class="date">2023-05-07</h4>
 
 </div>
 
@@ -1922,7 +1922,9 @@ border-radius: 0px;
 <h1><span class="header-section-number">1</span> セットアップ</h1>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#library(lme4)</span></span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">use_python</span>(<span class="st">&quot;/Users/oyokuratomo/opt/anaconda3/envs/native/bin&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#library(lme4)</span></span></code></pre></div>
 </div>
 <div id="内容" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> 内容</h1>
@@ -1944,6 +1946,7 @@ border-radius: 0px;
 <div id="データの作成" class="section level3" number="3.1.1">
 <h3><span class="header-section-number">3.1.1</span> データの作成</h3>
 <p>g2_rnorm_nonpaird.csvを生成する</p>
+<p>2つの異なる平均と標準偏差を持つ正規分布から生成されたデータを含む2つのグループを作成し、それらを結合して1つのデータフレームにします。その後、ID列を追加し、結果をCSVファイルに保存します。</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>group1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&quot;g&quot;</span> <span class="ot">=</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">50</span>), <span class="st">&quot;F1&quot;</span> <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>group2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&quot;g&quot;</span> <span class="ot">=</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">50</span>), <span class="st">&quot;F1&quot;</span> <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, <span class="at">mean =</span> <span class="dv">7</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span>
@@ -2030,6 +2033,80 @@ t検定の検定結果</h3>
 <span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co">#model &lt;- glmer(F1 ~ g + (1|ID), data = data, family = gaussian)</span></span>
 <span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co"># モデルの概要の表示</span></span>
 <span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#summary(model)</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="python" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Python</h1>
+<p>Pandasライブラリの read_csv()
+関数を使用して、CSVファイルからデータを読み取ります。そして、SciPyライブラリの
+ttest_ind()
+関数を使用して、両側の独立した2つの標本間でのt検定を実行します。data[‘g’]
+の値が0の行と1の行を、それぞれdata[data[‘g’] == 0][‘F1’]とdata[data[‘g’]
+== 1][‘F1’]で抽出します。</p>
+<p>最後に、print() 関数を使用して、t検定の結果を表示します。</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> ttest_ind</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/g2_rnorm_nonpaird.csv&quot;</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>t_test <span class="op">=</span> ttest_ind(data[data[<span class="st">&#39;g&#39;</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">&#39;F1&#39;</span>], data[data[<span class="st">&#39;g&#39;</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">&#39;F1&#39;</span>])</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="bu">print</span>(t_test)</span></code></pre></div>
+<pre><code>## Ttest_indResult(statistic=-10.227874587569234, pvalue=3.877394713448746e-17)</code></pre>
+<div id="r上でpythonの変数を利用" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span>
+R上でPythonの変数を利用</h2>
+<p>R MarkdownでPythonの変数をRで使う場合、以下の手順が必要です。</p>
+<ul>
+<li>Pythonの変数をreticulateパッケージでRの変数に変換する</li>
+<li>Rのコードチャンクで変換した変数を使う</li>
+</ul>
+<p>以下は、Pythonの変数xをRのt.test関数に渡す例です。</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># 1. Pythonの変数をreticulateパッケージでRの変数に変換する</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>data <span class="ot">&lt;-</span> py<span class="sc">$</span>data</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="co"># 2. Rのコードチャンクで変換した変数を使う</span></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="fu">t.test</span>(F1 <span class="sc">~</span> g, <span class="at">data=</span>data)</span></code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  F1 by g
+## t = -10.228, df = 93.647, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means between group 0 and group 1 is not equal to 0
+## 95 percent confidence interval:
+##  -2.551125 -1.721622
+## sample estimates:
+## mean in group 0 mean in group 1 
+##        4.964328        7.100701</code></pre>
+<p>上記のコードでは、まずPythonの変数dataをreticulateパッケージを使ってRの変数に変換しています。$演算子を使って、Pythonの変数をアクセスすることができます。</p>
+<p>Rのコードチャンクで、変換したdataをt.test()関数に渡しています。このようにして、PythonとRのコードを組み合わせることができます。ただし、R
+MarkdownでPythonを使用する場合は、事前にreticulateパッケージをインストールする必要があります。</p>
+<div id="回帰分析を追加する" class="section level3" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span>
+回帰分析を追加する</h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>linear_regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(F1 <span class="sc">~</span> g, <span class="at">data=</span>data)</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="fu">summary</span>(linear_regression)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = F1 ~ g, data = data)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -3.09379 -0.61412  0.03046  0.66774  2.32232 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   4.9643     0.1477   33.61   &lt;2e-16 ***
+## g             2.1364     0.2089   10.23   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.044 on 98 degrees of freedom
+## Multiple R-squared:  0.5163, Adjusted R-squared:  0.5114 
+## F-statistic: 104.6 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Pythonの変数dataをRのデータフレームに変換しています。Rのt.test()関数でt検定を行い、回帰分析にはlm()関数を使用しています。summary()関数で回帰分析の結果を表示しています。</p>
 </div>
 </div>
 </div>
