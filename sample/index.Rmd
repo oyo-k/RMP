@@ -75,7 +75,7 @@ Pythonをセットアップするには、
 
 ```{r, setup , class.source="fold-show"}
 library(reticulate)
-use_python("/Users/oyokuratomo/opt/anaconda3/envs/native/bin")
+use_python("/Users/******/opt/anaconda3/envs/native/bin")
 ```
 
 # 見出しレベル1
